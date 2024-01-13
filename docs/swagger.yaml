@@ -1,0 +1,54 @@
+basePath: /
+definitions:
+  dto.AddressDTO:
+    properties:
+      cep:
+        type: string
+      city:
+        type: string
+      neighborhood:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:3000
+info:
+  contact:
+    name: Diogo Silverio
+  description: CEP Search tool.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Go Expert - CEP Timeout
+  version: "1.0"
+paths:
+  /cep/{cep}:
+    get:
+      consumes:
+      - application/json
+      description: Fetch CEP/Address from two different providers - ViaCEP and BrasilAPI.
+      parameters:
+      - description: cep
+        in: path
+        name: cep
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: CEP found
+          schema:
+            $ref: '#/definitions/dto.AddressDTO'
+        "500":
+          description: Internal server error
+      summary: Get CEP/Address from provider
+      tags:
+      - cep
+swagger: "2.0"
