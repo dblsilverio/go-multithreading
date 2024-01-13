@@ -11,15 +11,20 @@ type GetCEPFromViaCEP struct{}
 
 const ViacepUrl = "https://viacep.com.br/ws/%s/json/"
 
-func (g *GetCEPFromViaCEP) FetchCEP(cep string) dto.AddressDTO {
+func (g *GetCEPFromViaCEP) FetchCEP(cep string) (*dto.AddressDTO, error) {
 
-	response := webclient.GET(requestViaCEPUrl(cep))
-	var addressViaCep dto.AddressViaCep
-	err := json.Unmarshal([]byte(response), &addressViaCep)
+	response, err := webclient.GET(requestViaCEPUrl(cep))
+
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
+	var addressViaCep dto.AddressViaCep
+	err = json.Unmarshal([]byte(response), &addressViaCep)
+	if err != nil {
+		fmt.Printf("Via Cep query failed: %s\n", err.Error())
+		return nil, err
+	}
 	addressDTO := dto.AddressDTO{
 		Cep:          addressViaCep.Cep,
 		State:        addressViaCep.Uf,
@@ -28,7 +33,7 @@ func (g *GetCEPFromViaCEP) FetchCEP(cep string) dto.AddressDTO {
 		Street:       addressViaCep.Logradouro,
 	}
 
-	return addressDTO
+	return &addressDTO, nil
 }
 
 func requestViaCEPUrl(cep string) string {

@@ -29,3 +29,7 @@ type AddressViaCep struct {
 	Ddd         string `json:"ddd"`
 	Siafi       string `json:"siafi"`
 }
+
+type ErrorDTO struct {
+	Message string `json:"message"`
+}

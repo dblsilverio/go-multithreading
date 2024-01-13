@@ -1,12 +1,17 @@
 package uc
 
-import "Multithreading/internal/dto"
+import (
+	"Multithreading/internal/dto"
+)
 
 type GetCEP interface {
-	FetchCEP(cep string) dto.AddressDTO
+	FetchCEP(cep string) (*dto.AddressDTO, error)
 }
 
 func FetchCepFromProvider(cepUC GetCEP, cep string, cAddress chan dto.AddressDTO) {
-	address := cepUC.FetchCEP(cep)
-	cAddress <- address
+	address, err := cepUC.FetchCEP(cep)
+	if err != nil {
+		return
+	}
+	cAddress <- *address
 }

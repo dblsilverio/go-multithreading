@@ -11,13 +11,19 @@ type GetCEPFromBrasilAPI struct{}
 
 const BrasilapiUrl = "https://brasilapi.com.br/api/cep/v1/%s"
 
-func (g *GetCEPFromBrasilAPI) FetchCEP(cep string) dto.AddressDTO {
+func (g *GetCEPFromBrasilAPI) FetchCEP(cep string) (*dto.AddressDTO, error) {
 
-	response := webclient.GET(requestBrasilAPIUrl(cep))
-	var addressViaCep dto.AddressBrasilAPI
-	err := json.Unmarshal([]byte(response), &addressViaCep)
+	response, err := webclient.GET(requestBrasilAPIUrl(cep))
+
 	if err != nil {
-		panic(err)
+		return nil, err
+	}
+
+	var addressViaCep dto.AddressBrasilAPI
+	err = json.Unmarshal([]byte(response), &addressViaCep)
+	if err != nil {
+		fmt.Printf("BrasilAPI query failed: %s\n", err.Error())
+		return nil, err
 	}
 	addressDTO := dto.AddressDTO{
 		Cep:          addressViaCep.Cep,
@@ -26,7 +32,8 @@ func (g *GetCEPFromBrasilAPI) FetchCEP(cep string) dto.AddressDTO {
 		Neighborhood: addressViaCep.Neighborhood,
 		Street:       addressViaCep.Street,
 	}
-	return addressDTO
+
+	return &addressDTO, nil
 
 }
 

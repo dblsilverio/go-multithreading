@@ -39,7 +39,7 @@ func (h *CepHandler) GetCEP(w http.ResponseWriter, request *http.Request) {
 	addressDTO, err := getCep(cep, h.apiTimeout)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		json.NewEncoder(w).Encode(dto.ErrorDTO{Message: err.Error()})
 		return
 	}
 
