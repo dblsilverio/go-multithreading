@@ -9,7 +9,7 @@ import (
 
 type GetCEPFromBrasilAPI struct{}
 
-const BrasilapiUrl = "https://viacep.com.br/ws/%s/json/"
+const BrasilapiUrl = "https://brasilapi.com.br/api/cep/v1/%s"
 
 func (g *GetCEPFromBrasilAPI) FetchCEP(cep string) dto.AddressDTO {
 
